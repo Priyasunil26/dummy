@@ -11,5 +11,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/reporting/reportservice
 EXPOSE 80
-COPY /reporting/reportservice .
+COPY /application/reporting/reportservice .
 ENTRYPOINT ["bash", "entrypoint.sh"]

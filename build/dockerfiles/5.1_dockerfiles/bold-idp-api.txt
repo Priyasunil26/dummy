@@ -10,5 +10,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/idp/api
 EXPOSE 80
-COPY /idp/api .
+COPY /application/idp/api .
 ENTRYPOINT ["dotnet", "Syncfusion.Server.IdentityProvider.API.Core.dll"]

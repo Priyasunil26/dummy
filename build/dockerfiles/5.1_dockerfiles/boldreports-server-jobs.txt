@@ -11,5 +11,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/reporting/jobs
 EXPOSE 80
-COPY /reporting/jobs .
+COPY /application/reporting/jobs .
 ENTRYPOINT ["bash", "entrypoint.sh"]

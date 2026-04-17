@@ -10,5 +10,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/idp/ums
 EXPOSE 80
-COPY /idp/ums .
+COPY /application/idp/ums .
 ENTRYPOINT ["dotnet", "Syncfusion.TenantManagement.Core.dll"]

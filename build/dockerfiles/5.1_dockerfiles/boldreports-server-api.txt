@@ -11,5 +11,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/reporting/api
 EXPOSE 80
-COPY /reporting/api .
+COPY /application/reporting/api .
 ENTRYPOINT ["bash", "entrypoint.sh"]

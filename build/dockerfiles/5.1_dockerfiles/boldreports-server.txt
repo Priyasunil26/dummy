@@ -11,5 +11,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/reporting/web
 EXPOSE 80
-COPY /reporting/web .
+COPY /application/reporting/web .
 ENTRYPOINT ["bash", "entrypoint.sh"]

@@ -11,5 +11,5 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/reporting/viewer
 EXPOSE 80
-COPY /reporting/viewer .
+COPY /application/reporting/viewer .
 ENTRYPOINT ["bash", "entrypoint.sh"]
