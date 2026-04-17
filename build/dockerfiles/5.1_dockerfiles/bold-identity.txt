@@ -10,6 +10,6 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /application/idp/web
 EXPOSE 80
-COPY /idp/web .
+COPY /application/idp/web .
 
 ENTRYPOINT ["bash", "entrypoint.sh"]
