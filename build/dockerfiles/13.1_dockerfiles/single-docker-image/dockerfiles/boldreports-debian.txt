@@ -1,0 +1,87 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS base
+
+RUN apt-get update && apt-get install -y \
+  fontconfig \
+  libgdiplus \
+  nginx \
+  zip \
+  nano \
+  procps \
+  jq \
+  curl \
+  iputils-ping \
+  python3 \
+  python3-pip \
+  git
+
+RUN pip install duckdb===1.1.2 --break-system-packages
+RUN pip install dlt===0.5.4 --break-system-packages
+RUN pip install pymysql --break-system-packages
+RUN pip install pyodbc --break-system-packages
+RUN pip install pg8000 --break-system-packages
+RUN pip install poetry --break-system-packages
+RUN pip install pandas --break-system-packages
+RUN pip install "dlt[parquet]" --break-system-packages
+RUN pip install "dlt[filesystem]" --break-system-packages
+RUN pip install pymssql --break-system-packages
+RUN pip install pyodbc --break-system-packages
+
+RUN pip install sqlalchemy --break-system-packages
+RUN pip install oracledb --break-system-packages
+RUN pip install stripe --break-system-packages
+RUN pip install simple-salesforce --break-system-packages
+RUN pip install boto3 --break-system-packages
+RUN pip install pymongo --break-system-packages
+RUN pip install botocore --break-system-packages
+RUN pip install google-analytics-data --break-system-packages
+RUN pip install google-api-python-client --break-system-packages
+RUN pip install google-auth-oauthlib --break-system-packages
+RUN pip install requests_oauthlib --break-system-packages
+RUN pip install facebook-business --break-system-packages
+RUN pip install openpyxl --break-system-packages
+RUN pip install xlrd===2.0.1 --break-system-packages
+RUN pip install clickhouse-driver --break-system-packages
+RUN pip install firebolt-sdk==1.12.0 --break-system-packages
+RUN pip install "dlt[synapse]" --break-system-packages
+RUN pip install "dlt[az]" --break-system-packages
+RUN pip install "dlt[bigquery]" --break-system-packages
+RUN pip install "dlt[snowflake]" --break-system-packages
+RUN pip install "dlt[clickhouse]" --break-system-packages
+
+RUN pip install elasticsearch===8.15.1 --break-system-packages
+RUN pip install google-ads==28.0.0 --break-system-packages
+
+RUN apt-get update && \
+    apt-get -y install xvfb gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 \
+      libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 \
+      libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 \
+      libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 \
+      libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get purge -y --auto-remove linux-libc-dev
+
+ENV OPENSSL_CONF=/etc/ssl/
+ENV BOLD_SERVICES_HOSTING_ENVIRONMENT=docker
+ENV OPTIONAL_LIBS=mysql,oracle,postgresql,snowflake,googlebigquery,mongodb
+
+WORKDIR /application
+
+ARG DOTNET_DOWNLOAD_URL="https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/10.0.5/aspnetcore-runtime-10.0.5-linux-x64.tar.gz"
+RUN mkdir -p /application/dotnet/ && \
+    curl -o /tmp/aspnetcore-runtime.tar.gz $DOTNET_DOWNLOAD_URL && \
+    tar -xzf /tmp/aspnetcore-runtime.tar.gz -C /application/dotnet && \
+    chmod +x /application/dotnet/dotnet && \
+    rm /tmp/aspnetcore-runtime.tar.gz
+RUN ln -sf /application/dotnet/dotnet /usr/bin/dotnet
+
+EXPOSE 80
+EXPOSE 443
+
+COPY /application .
+
+RUN chmod +x ./entrypoint.sh
+
+CMD ./entrypoint.sh

@@ -1,0 +1,23 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim-arm64v8 AS base
+
+RUN apt-get update && apt-get install -y \
+  libgdiplus \
+  zip \
+  nano \
+  curl
+
+WORKDIR /application/idp/api
+
+ARG DOTNET_DOWNLOAD_URL="https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/10.0.5/aspnetcore-runtime-10.0.5-linux-arm64.tar.gz"
+RUN mkdir -p /application/dotnet/ && \
+    curl -o /tmp/aspnetcore-runtime.tar.gz $DOTNET_DOWNLOAD_URL && \
+    tar -xzf /tmp/aspnetcore-runtime.tar.gz -C /application/dotnet && \
+    chmod +x /application/dotnet/dotnet && \
+    rm /tmp/aspnetcore-runtime.tar.gz
+RUN ln -sf /application/dotnet/dotnet /usr/bin/dotnet
+
+EXPOSE 80
+COPY application/idp/api .
+ENTRYPOINT ["bash", "entrypoint.sh"]

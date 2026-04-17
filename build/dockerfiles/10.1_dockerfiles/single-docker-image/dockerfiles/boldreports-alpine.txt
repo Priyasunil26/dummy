@@ -1,0 +1,56 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+
+RUN apk update
+RUN apk add curl
+RUN apk add bash fontconfig
+RUN apk add libgdiplus --repository https://dl-3.alpinelinux.org/alpine/edge/testing/
+RUN apk add --no-cache icu-libs krb5-libs libgcc libintl libssl3 libstdc++ zlib tzdata git python3 py3-pip build-base python3-dev unixodbc-dev libffi-dev
+
+RUN pip install duckdb===1.1.2 --break-system-packages
+RUN pip install dlt===0.5.4 --break-system-packages
+RUN pip install pymysql --break-system-packages
+RUN pip install pg8000 --break-system-packages
+RUN pip install poetry --break-system-packages
+RUN pip install "dlt[filesystem]" --break-system-packages
+RUN pip install pandas --break-system-packages
+RUN pip install pymssql --break-system-packages
+RUN pip install pyodbc --break-system-packages
+
+RUN pip install sqlalchemy --break-system-packages
+RUN pip install oracledb --break-system-packages
+RUN pip install stripe --break-system-packages
+RUN pip install simple-salesforce --break-system-packages
+RUN pip install boto3 --break-system-packages
+RUN pip install pymongo --break-system-packages
+RUN pip install botocore --break-system-packages
+RUN pip install google-analytics-data --break-system-packages
+RUN pip install google-api-python-client --break-system-packages
+RUN pip install google-auth-oauthlib --break-system-packages
+RUN pip install requests_oauthlib --break-system-packages
+RUN pip install facebook-business --break-system-packages
+RUN pip install openpyxl --break-system-packages
+RUN pip install xlrd===2.0.1 --break-system-packages
+
+RUN pip install elasticsearch===8.15.1 --break-system-packages
+
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV OPENSSL_CONF=/etc/ssl/
+ENV OS_ENV=alpine
+ENV BOLD_SERVICES_HOSTING_ENVIRONMENT=docker
+ENV OPTIONAL_LIBS=mysql,oracle,postgresql,snowflake,googlebigquery
+
+RUN mkdir -p /run/nginx
+RUN apk add nginx procps jq
+
+WORKDIR /application
+
+EXPOSE 80
+EXPOSE 443
+
+COPY /application .
+
+RUN chmod +x ./entrypoint.sh
+
+CMD ./entrypoint.sh

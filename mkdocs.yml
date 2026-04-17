@@ -1,0 +1,86 @@
+site_name: "Bold Reports Utilities Documentation"
+site_description: "Comprehensive deployment documentation for Bold Reports Utilities covering Linux, Docker, and Kubernetes deployments"
+site_author: "Bold Reports Team"
+
+docs_dir: docs
+
+nav:
+  - Home: index.md
+  - Code Documentation:
+      - Overview: code-docs/index.md
+      - "Chapter 1: Linux Deployment Scripts": code-docs/01_linux_deployment_scripts.md
+      - "Chapter 2: Client Library Installer (Linux)": code-docs/02_client_library_installer_linux.md
+      - "Chapter 3: Entrypoint Scripts": code-docs/03_entrypoint_scripts.md
+      - "Chapter 4: Docker Single-Container Deployment": code-docs/04_docker_single_container_deployment.md
+      - "Chapter 5: Docker Multi-Container Deployment": code-docs/05_docker_multi_container_deployment.md
+      - "Chapter 6: Kubernetes Deployment": code-docs/06_kubernetes_deployment.md
+      - "Chapter 7: MoveSharedFiles Utility": code-docs/07_move_shared_files_utility.md
+      - "Chapter 8: Client Library Utility (Windows/.NET)": code-docs/08_client_library_utility_windows.md
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - tags
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/boldreports
+  version:
+    provider: mike
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
+extra_css:
+  - stylesheets/extra.css
+
+copyright: Copyright &copy; 2026 Bold Reports Team

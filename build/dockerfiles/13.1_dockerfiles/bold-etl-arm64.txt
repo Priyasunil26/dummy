@@ -1,0 +1,73 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim-arm64v8 AS base
+
+# Install common utilities and dependencies
+RUN apt-get update && apt-get install -y \
+  fontconfig \
+  zip \
+  nano \
+  curl \
+  iputils-ping \
+  git \
+  python3 \
+  python3-pip && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN pip install duckdb===1.1.2 --break-system-packages
+RUN pip install dlt===0.5.4 --break-system-packages
+RUN pip install pymysql --break-system-packages
+RUN pip install pyodbc --break-system-packages
+RUN pip install pg8000 --break-system-packages
+RUN pip install poetry --break-system-packages
+RUN pip install pandas --break-system-packages
+RUN pip install "dlt[parquet]" --break-system-packages
+RUN pip install "dlt[filesystem]" --break-system-packages
+RUN pip install pymssql --break-system-packages
+RUN pip install pyodbc --break-system-packages
+
+RUN pip install sqlalchemy --break-system-packages
+RUN pip install oracledb --break-system-packages
+RUN pip install stripe --break-system-packages
+RUN pip install simple-salesforce --break-system-packages
+RUN pip install boto3 --break-system-packages
+RUN pip install pymongo --break-system-packages
+RUN pip install botocore --break-system-packages
+RUN pip install google-analytics-data --break-system-packages
+RUN pip install google-api-python-client --break-system-packages
+RUN pip install google-auth-oauthlib --break-system-packages
+RUN pip install requests_oauthlib --break-system-packages
+RUN pip install facebook-business --break-system-packages
+RUN pip install openpyxl --break-system-packages
+RUN pip install xlrd===2.0.1 --break-system-packages
+RUN pip install clickhouse-driver --break-system-packages
+RUN pip install firebolt-sdk==1.12.0 --break-system-packages
+RUN pip install "dlt[synapse]" --break-system-packages
+RUN pip install "dlt[az]" --break-system-packages
+RUN pip install "dlt[bigquery]" --break-system-packages
+RUN pip install "dlt[snowflake]" --break-system-packages
+RUN pip install "dlt[clickhouse]" --break-system-packages
+
+RUN pip install elasticsearch===8.15.1 --break-system-packages
+RUN pip install google-ads==28.0.0 --break-system-packages
+
+RUN apt-get purge -y --auto-remove linux-libc-dev
+
+# Set working directory inside the container
+WORKDIR /application/etl/etlservice
+
+ARG DOTNET_DOWNLOAD_URL="https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/10.0.5/aspnetcore-runtime-10.0.5-linux-arm64.tar.gz"
+RUN mkdir -p /application/dotnet/ && \
+    curl -o /tmp/aspnetcore-runtime.tar.gz $DOTNET_DOWNLOAD_URL && \
+    tar -xzf /tmp/aspnetcore-runtime.tar.gz -C /application/dotnet && \
+    chmod +x /application/dotnet/dotnet && \
+    rm /tmp/aspnetcore-runtime.tar.gz
+RUN ln -sf /application/dotnet/dotnet /usr/bin/dotnet
+
+# Expose port 80 for the application
+EXPOSE 80
+EXPOSE 8080
+
+# Copy application files into the container
+COPY application/etl/etlservice .
+
+# Define the entry point for the application
+ENTRYPOINT ["dotnet", "BoldDataHub.dll", "--urls=http://0.0.0.0:80"]

@@ -1,0 +1,19 @@
+{
+  "InternalAppUrl": {
+    "Idp": "http://localhost",
+    "Bi": "",
+    "BiDesigner": "http://localhost/bi/designer",
+    "Reports": "http://localhost/reporting",
+    "ReportsService": "http://localhost/reporting/reportservice",
+    "AiService": ""
+  },
+  "BoldProducts": [
+    {
+      "Name": "BoldReports",
+      "SetupName": "BoldReports_EnterpriseReporting",
+      "Version": "6.3.16",
+      "IDPVersion": "4.28.1",
+      "IsCommonLogin": false
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Auto detect shell files and perform LF normalization
+*.sh		text eol=lf
